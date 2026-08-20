@@ -176,15 +176,31 @@
     margin:0;
     padding:0;
     display:grid;
-    gap:10px;
+    gap:2px;
   }
-  .info-legend li{
+  .legend-row{
     font-weight:600;
     color:var(--electric-blue);
     font-size:15.5px;
+    text-decoration:none;
     display:flex;
     align-items:center;
     gap:10px;
+    padding:8px 8px;
+    border-radius:8px;
+    cursor:pointer;
+    transition: background .15s ease, transform .15s ease;
+  }
+  a.legend-row:hover{
+    background:rgba(6,120,213,0.08);
+    transform:translateX(2px);
+  }
+  span.legend-row{
+    cursor:default;
+    color:var(--muted);
+  }
+  span.legend-row:hover{
+    background:rgba(38,55,70,0.05);
   }
   .info-legend .dot{
     width:9px; height:9px; border-radius:50%;
@@ -519,6 +535,25 @@ const svg = document.getElementById('wheelSvg');
 const NS = 'http://www.w3.org/2000/svg';
 const sliceAngle = 360 / slices.length;
 
+// Keep a reference to each slice's <g> so legend rows can drive the same
+// hover state (grow/pop) from outside the SVG.
+const sliceGroups = [];
+
+function applySliceHover(i){
+  const g = sliceGroups[i];
+  if(!g) return;
+  const tx = g.style.getPropertyValue('--tx');
+  const ty = g.style.getPropertyValue('--ty');
+  g.style.transform = `translate(${tx}, ${ty}) scale(1.06)`;
+  g.classList.add('slice-hover');
+}
+function clearSliceHover(i){
+  const g = sliceGroups[i];
+  if(!g) return;
+  g.style.transform = '';
+  g.classList.remove('slice-hover');
+}
+
 slices.forEach((slice, i) => {
   const startAngle = i * sliceAngle;
   const endAngle = startAngle + sliceAngle;
@@ -533,11 +568,11 @@ slices.forEach((slice, i) => {
   g.style.setProperty('--tx', (dir.x * 10).toFixed(2) + 'px');
   g.style.setProperty('--ty', (dir.y * 10).toFixed(2) + 'px');
   g.addEventListener('mouseenter', () => {
-    g.style.transform = `translate(${g.style.getPropertyValue('--tx')}, ${g.style.getPropertyValue('--ty')}) scale(1.06)`;
+    applySliceHover(i);
     showInfo(slice);
   });
   g.addEventListener('mouseleave', () => {
-    g.style.transform = '';
+    clearSliceHover(i);
     resetInfo();
   });
   g.addEventListener('click', () => {
@@ -561,6 +596,7 @@ slices.forEach((slice, i) => {
   });
 
   svg.appendChild(g);
+  sliceGroups[i] = g;
 });
 
 // center circle
@@ -587,36 +623,43 @@ svg.appendChild(centerText2);
 
 /* ---------------- Info panel ---------------- */
 const infoPanel = document.getElementById('infoPanel');
-const legendList = document.getElementById('infoLegend');
 
-function renderLegend(){
-  legendList.innerHTML = '';
-  slices.forEach(s => {
-    const li = document.createElement('li');
-    const dot = document.createElement('span');
-    dot.className = 'dot';
-    dot.style.background = s.color;
-    li.appendChild(dot);
-    li.appendChild(document.createTextNode(s.label.join(' ')));
-    legendList.appendChild(li);
-  });
-}
-
+// Rebuilds the default (non-hovered) state of the info panel: the legend
+// list. Each legend row is wired to the *same* slice index as its wheel
+// wedge, so hovering the text drives the wheel and vice versa, and
+// clicking the text navigates to the same link as clicking the wedge.
 function resetInfo(){
   infoPanel.innerHTML = `<div class="eyebrow">What we do</div><ul class="info-legend" id="infoLegend"></ul>`;
-  document.getElementById('infoLegend').style.display = 'grid';
-  legendListRefresh();
-}
-function legendListRefresh(){
   const el = document.getElementById('infoLegend');
-  el.innerHTML = '';
-  slices.forEach(s => {
+
+  slices.forEach((s, i) => {
     const li = document.createElement('li');
+
     const dot = document.createElement('span');
     dot.className = 'dot';
     dot.style.background = s.color;
-    li.appendChild(dot);
-    li.appendChild(document.createTextNode(s.label.join(' ')));
+
+    // Use an <a> when there's a real link so it's keyboard/click
+    // navigable too; fall back to a plain span for the two "void" slices.
+    const row = s.href ? document.createElement('a') : document.createElement('span');
+    row.className = 'legend-row';
+    if(s.href){
+      row.href = s.href;
+      row.target = '_top';
+    }
+    row.appendChild(dot);
+    row.appendChild(document.createTextNode(s.label.join(' ')));
+
+    row.addEventListener('mouseenter', () => {
+      applySliceHover(i);
+      showInfo(s);
+    });
+    row.addEventListener('mouseleave', () => {
+      clearSliceHover(i);
+      resetInfo();
+    });
+
+    li.appendChild(row);
     el.appendChild(li);
   });
 }
