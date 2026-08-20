@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUB Employee Benefits</title>
+<style>
+  :root{
+    --classic-blue:#263746;
+    --electric-blue:#0678d5;
+    --arctic-gray:#e3e3e3;
+    --white:#ffffff;
+    --ink:#263746;
+    --muted:#5b6b78;
+    --border:#e2e5e8;
+    --page-bg:#f4f6f7;
+    --radius:12px;
+    --shadow-sm: 0 1px 2px rgba(38,55,70,0.06);
+    --shadow-md: 0 6px 18px rgba(38,55,70,0.12);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--page-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    color:var(--ink);
+  }
+
+  .page{
+    max-width:1100px;
+    margin:0 auto;
+    padding:32px 24px 64px;
+  }
+
+  /* ---------- Banner ---------- */
+  .banner{
+    position:relative;
+    background:var(--classic-blue);
+    border-radius:var(--radius);
+    padding:28px 32px;
+    margin-bottom:28px;
+    overflow:hidden;
+    text-align:center;
+  }
+  .banner h1, .banner h2{
+    margin:0;
+    color:var(--white);
+    font-weight:700;
+    letter-spacing:0.2px;
+    position:relative;
+    z-index:2;
+  }
+  .banner.hero h1{ font-size:34px; }
+  .banner h2{ font-size:24px; }
+  .banner .dots{
+    position:absolute;
+    top:50%; transform:translateY(-50%);
+    width:130px; height:70px;
+    background-image: radial-gradient(rgba(255,255,255,0.18) 1.4px, transparent 1.4px);
+    background-size:11px 11px;
+    z-index:1;
+  }
+  .banner .dots.left{ left:22px; }
+  .banner .dots.right{ right:22px; }
+  .banner .accent{
+    color:var(--electric-blue);
+  }
+
+  /* ---------- Hero / Wheel ---------- */
+  .hero-section{
+    display:grid;
+    grid-template-columns: minmax(320px, 440px) 1fr;
+    gap:36px;
+    align-items:center;
+    margin-bottom:28px;
+  }
+  .wheel-wrap{
+    display:flex;
+    justify-content:center;
+  }
+  .wheel-svg{ width:100%; max-width:420px; height:auto; overflow:visible; }
+  .slice-group{
+    cursor:pointer;
+    transform-box: fill-box;
+    transform-origin:center;
+    transition: transform .25s ease, filter .25s ease;
+  }
+  .slice-group:hover{
+    filter: brightness(1.08) drop-shadow(0 8px 16px rgba(0,0,0,0.28));
+  }
+  .slice-path{
+    stroke:#f4f6f7;
+    stroke-width:3;
+  }
+  .slice-label{
+    fill:var(--white);
+    font-size:12.5px;
+    font-weight:700;
+    text-anchor:middle;
+    pointer-events:none;
+  }
+  .center-circle{
+    fill:var(--white);
+    stroke:var(--arctic-gray);
+    stroke-width:2;
+  }
+  .center-text-1{
+    fill:var(--classic-blue);
+    font-size:14px;
+    font-weight:800;
+    text-anchor:middle;
+    pointer-events:none;
+  }
+  .center-text-2{
+    fill:var(--electric-blue);
+    font-size:14px;
+    font-weight:800;
+    text-anchor:middle;
+    pointer-events:none;
+  }
+
+  .info-panel{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:26px 28px;
+    min-height:260px;
+    box-shadow:var(--shadow-sm);
+  }
+  .info-panel .eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--electric-blue);
+    margin-bottom:10px;
+  }
+  .info-panel h3{
+    margin:0 0 12px;
+    font-size:22px;
+    color:var(--classic-blue);
+  }
+  .info-panel p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.55;
+    font-size:15px;
+  }
+  .info-legend{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:10px;
+  }
+  .info-legend li{
+    font-weight:600;
+    color:var(--electric-blue);
+    font-size:15.5px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .info-legend .dot{
+    width:9px; height:9px; border-radius:50%;
+    flex-shrink:0;
+  }
+
+  /* ---------- Button grid ---------- */
+  .btn-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:12px;
+    margin-bottom:44px;
+  }
+  .btn-grid a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:var(--electric-blue);
+    color:var(--white);
+    text-decoration:none;
+    font-weight:600;
+    font-size:14px;
+    padding:14px 10px;
+    border-radius:8px;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .btn-grid a:hover{
+    background:#055fae;
+    transform:translateY(-1px);
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs-section{ margin-bottom:44px; }
+  .tab-list{
+    display:flex;
+    gap:6px;
+    border-bottom:2px solid var(--border);
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .tab-btn{
+    appearance:none;
+    border:none;
+    background:none;
+    padding:12px 18px;
+    font-size:15px;
+    font-weight:600;
+    color:var(--muted);
+    cursor:pointer;
+    position:relative;
+    top:2px;
+    border-bottom:2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .tab-btn:hover{ color:var(--classic-blue); }
+  .tab-btn.active{
+    color:var(--electric-blue);
+    border-bottom-color:var(--electric-blue);
+  }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+  .resource-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .resource-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    text-decoration:none;
+    color:var(--ink);
+    box-shadow:var(--shadow-sm);
+    transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .resource-row:hover{
+    box-shadow:var(--shadow-md);
+    border-color:var(--electric-blue);
+    transform:translateY(-1px);
+  }
+  .resource-row .icon{
+    flex-shrink:0;
+    width:36px; height:36px;
+    border-radius:8px;
+    background:rgba(6,120,213,0.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--electric-blue);
+  }
+  .resource-row .label{
+    flex:1;
+    font-weight:600;
+    font-size:14.5px;
+  }
+  .resource-row .arrow{
+    flex-shrink:0;
+    color:var(--muted);
+    transition: transform .15s ease, color .15s ease;
+  }
+  .resource-row:hover .arrow{
+    color:var(--electric-blue);
+    transform:translateX(3px);
+  }
+  .resource-row.pending{ opacity:0.62; }
+  .resource-row.pending .label::after{
+    content:" (link pending)";
+    font-weight:400;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* ---------- Compliance list ---------- */
+  .compliance-section{ margin-bottom:20px; }
+  .compliance-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+
+  @media (max-width: 780px){
+    .hero-section{ grid-template-columns:1fr; }
+    .btn-grid{ grid-template-columns:repeat(2,1fr); }
+    .resource-grid, .compliance-grid{ grid-template-columns:1fr; }
+    .banner.hero h1{ font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="banner hero">
+    <span class="dots left"></span>
+    <span class="dots right"></span>
+    <h1>HUB <span style="font-weight:400;">Employee Benefits</span></h1>
+  </div>
+
+  <div class="hero-section">
+    <div class="wheel-wrap">
+      <svg class="wheel-svg" viewBox="0 0 440 440" id="wheelSvg"></svg>
+    </div>
+
+    <div class="info-panel" id="infoPanel">
+      <div class="eyebrow">What we do</div>
+      <ul class="info-legend" id="infoLegend"></ul>
+    </div>
+  </div>
+
+  <div class="btn-grid">
+    <a href="https://hub.seismic.com/apps/doccenter/fb364f14-84f4-40a9-ae2b-a78fdecf48aa/doc/%252Fddf237ce02-1d8b-48fb-9b1b-841fea459906%252FdfZDZkY2UxMmYtZDhmYi00YzY3LWI3MzQtZmQ3NDY1ZmM0ZTJk%252CPT0%253D%252CMi4gRW1wbG95ZWUgQmVuZWZpdHM%253D%252FdfMjIxMzEwOWEtYzU3Ny00ZWQ0LWE0OTUtZmJjMmMzOGViZWRh%252CPT0%253D%252CQ2FuYWRh%252Flfc2ece9e0-351b-4943-8b3a-afe6b9e7947b//" target="_top">Individual Medical Directory</a>
+    <a href="https://hub.seismic.com/Link/Content/DCJfCdR9DF6Wf82G7mqpD8XJ99bG" target="_top">Health Insights by HUB</a>
+    <a href="https://hub.seismic.com/apps/doccenter/fb364f14-84f4-40a9-ae2b-a78fdecf48aa/doc/%252Fddf237ce02-1d8b-48fb-9b1b-841fea459906%252FdfZDZkY2UxMmYtZDhmYi00YzY3LWI3MzQtZmQ3NDY1ZmM0ZTJk%252CPT0%253D%252CMi4gRW1wbG95ZWUgQmVuZWZpdHM%253D%252FdfMjIxMzEwOWEtYzU3Ny00ZWQ0LWE0OTUtZmJjMmMzOGViZWRh%252CPT0%253D%252CVVNB%252Flf8e807c37-78c2-4ec8-a71d-9dbe991725cf//" target="_top">Medicare</a>
+    <a href="https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdd83ef8e90-7270-2ba5-fe9c-e9a50eb9aa12%252Fld8736e2b0-a2f4-426d-9de0-4c02cc368250//" target="_top">Surveys &amp; Benchmarking</a>
+    <a href="https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdd5af76d74-d756-477c-bba5-a5b96a4b981a//" target="_top">Retirement &amp; Private Wealth</a>
+    <a href="https://hub.seismic.com/apps/doccenter/fb364f14-84f4-40a9-ae2b-a78fdecf48aa/doc/%252Fddf237ce02-1d8b-48fb-9b1b-841fea459906%252FdfZDZkY2UxMmYtZDhmYi00YzY3LWI3MzQtZmQ3NDY1ZmM0ZTJk%252CPT0%253D%252CMi4gRW1wbG95ZWUgQmVuZWZpdHM%253D%252FdfMjIxMzEwOWEtYzU3Ny00ZWQ0LWE0OTUtZmJjMmMzOGViZWRh%252CPT0%253D%252CVVNB%252Flfef62c1b0-6f2e-4e34-b295-403da878fcc6//" target="_top">FNA Insurance Services</a>
+    <a href="https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdd83ef8e90-7270-2ba5-fe9c-e9a50eb9aa12%252Fldbe10e91f-8cd5-4890-81f1-e1ed0ac48fac//" target="_top">Cross-Border Benefits</a>
+  </div>
+
+  <!-- TABBED RESOURCE SECTION -->
+  <div class="tabs-section">
+    <div class="banner">
+      <span class="dots left"></span>
+      <span class="dots right"></span>
+      <h2>Resources &amp; Best Practices</h2>
+    </div>
+
+    <div class="tab-list">
+      <button class="tab-btn active" data-tab="internal">Internal Resources &amp; Training</button>
+      <button class="tab-btn" data-tab="lifecycle">Annual Client Lifecycle</button>
+      <button class="tab-btn" data-tab="specialty">EB Specialty Practices</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-internal">
+      <div class="resource-grid" id="grid-internal"></div>
+    </div>
+    <div class="tab-panel" id="tab-lifecycle">
+      <div class="resource-grid" id="grid-lifecycle"></div>
+    </div>
+    <div class="tab-panel" id="tab-specialty">
+      <div class="resource-grid" id="grid-specialty"></div>
+    </div>
+  </div>
+
+  <!-- COMPLIANCE SECTION -->
+  <div class="compliance-section">
+    <div class="banner">
+      <span class="dots left"></span>
+      <span class="dots right"></span>
+      <h2>EB Compliance Consulting</h2>
+    </div>
+    <div class="compliance-grid" id="grid-compliance"></div>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- Icons ---------------- */
+const ICON_DOC = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+const ICON_ARROW = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+
+function makeRow(label, href){
+  const isPending = !href;
+  const a = document.createElement('a');
+  a.className = 'resource-row' + (isPending ? ' pending' : '');
+  a.href = href || '#';
+  if(!isPending) a.target = '_top';
+  a.innerHTML = `
+    <span class="icon">${ICON_DOC}</span>
+    <span class="label">${label}</span>
+    <span class="arrow">${ICON_ARROW}</span>
+  `;
+  return a;
+}
+
+/* ---------------- Tab content data ---------------- */
+const internalItems = [
+  ["US Employee Benefits Leadership Directory", null],
+  ["National EB Updates", null],
+  ["Employee Benefits 3C Carriers", null],
+  ["US EB Vendor Directory - BenefitPitch", null],
+  ["Webinars & Training (Internal Only)", null],
+  ["EB Training & Onboarding Resources", null],
+  ["National EB Strategic Partnerships", null],
+  ["EB Sales Resources & Training", null],
+];
+
+const lifecycleItems = [
+  ["New Client Implementation", null],
+  ["Renewal & Open Enrollment", null],
+  ["Strategic Planning Decks", null],
+  ["Stewardship / Post-renewal", null],
+  ["Annual Client Service", null],
+  ["Account Team Onboarding & Training", null],
+  ["Miscellaneous Templates & Samples", null],
+];
+
+const specialtyItems = [
+  ["Absence Management", null],
+  ["Actuarial & Financial Consulting", null],
+  ["Alternative Risk & PEO", null],
+  ["Clinical Consulting", null],
+  ["Communication & Design", null],
+  ["Global Benefits Consulting", null],
+  ["Health & Performance", null],
+  ["People & Technology Consulting", null],
+  ["Pharmacy Consulting", null],
+  ["Stop-Loss Insurance Services", null],
+  ["Voluntary Benefits", null],
+  ["Workforce Technology Solutions", null],
+];
+
+const complianceItems = [
+  ["HUB EB Compliance Practice", "https://hub.seismic.com/apps/doccenter/fb364f14-84f4-40a9-ae2b-a78fdecf48aa/doc/%252Fddf237ce02-1d8b-48fb-9b1b-841fea459906%252FdfZDZkY2UxMmYtZDhmYi00YzY3LWI3MzQtZmQ3NDY1ZmM0ZTJk%252CPT0%253D%252CMi4gRW1wbG95ZWUgQmVuZWZpdHM%253D%252FdfMjIxMzEwOWEtYzU3Ny00ZWQ0LWE0OTUtZmJjMmMzOGViZWRh%252CPT0%253D%252CVVNB%252Flf67f4f2aa-fa2d-4004-95a5-4800c7091982//"],
+  ["Compliance Library by Topic", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fldc3cd827f-21e0-4620-b6b2-422862d16d60//"],
+  ["Compliance Alerts & Bulletins", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fldbb062ee6-47b2-4564-952f-1a7d739cab4a//"],
+  ["In Compliance Monthly EB Newsletter", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fld39701cc9-9f8f-4ae9-b2ea-97939d3c0fb3//"],
+  ["EB Compensation Disclosure App", "https://hub.seismic.com/apps/doccenter/fb364f14-84f4-40a9-ae2b-a78fdecf48aa/doc/%252Fddf237ce02-1d8b-48fb-9b1b-841fea459906%252FdfZDZkY2UxMmYtZDhmYi00YzY3LWI3MzQtZmQ3NDY1ZmM0ZTJk%252CPT0%253D%252CMi4gRW1wbG95ZWUgQmVuZWZpdHM%253D%252FdfMjIxMzEwOWEtYzU3Ny00ZWQ0LWE0OTUtZmJjMmMzOGViZWRh%252CPT0%253D%252CVVNB%252Flf7ae9e59b-b597-436a-bc33-193111186e6d//"],
+  ["EB Notices & Forms Kit", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fld2c494f9e-4356-4bc8-809e-4778aaa50b22//"],
+  ["Plan Document Services", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fldd144fb9b-f16e-42ec-aed5-2bf26fe59d5b//"],
+  ["Compliance Webinars & Training", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fld84862b8c-3e3d-4e55-9435-bda4a31590aa//"],
+  ["Compliance Calendars", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fld32d67dd4-3c29-4429-a094-db95ffd4010f//"],
+  ["Form 5500 Services", "https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed%252Fld5699c0fc-5fe9-4ca4-82ce-d1b7db0bc52b//"],
+];
+
+function fillGrid(containerId, items){
+  const container = document.getElementById(containerId);
+  items.forEach(([label, href]) => container.appendChild(makeRow(label, href)));
+}
+fillGrid('grid-internal', internalItems);
+fillGrid('grid-lifecycle', lifecycleItems);
+fillGrid('grid-specialty', specialtyItems);
+fillGrid('grid-compliance', complianceItems);
+
+/* ---------------- Tabs behavior ---------------- */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------------- Wheel ---------------- */
+const CLASSIC_BLUE = '#263746';
+const ELECTRIC_BLUE = '#0678d5';
+
+const slices = [
+  { label: ['Client/HR', 'Advocacy'], color: CLASSIC_BLUE, href: 'https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdd83ef8e90-7270-2ba5-fe9c-e9a50eb9aa12%252Fld6c1a9a55-6cc5-4f64-9455-07d4d5f8345e//',
+    blurb: 'Dedicated support that keeps your HR team informed, prepared, and heard at every step.' },
+  { label: ['Cost', 'Management'], color: '#0a5a9e', href: 'https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fddab9a3d2a-9e24-34ac-7ddf-c57edb168420//',
+    blurb: 'Data-driven strategies to control costs while protecting the value of your benefits program.' },
+  { label: ['Compliance', 'Consulting'], color: ELECTRIC_BLUE, href: 'https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde6084bb4-a040-ef9a-3274-ad82b52366ed//',
+    blurb: 'Stay ahead of shifting regulations with expert compliance guidance and support.' },
+  { label: ['Employee', 'Engagement'], color: '#3d5871', href: null,
+    blurb: 'Programs and communication that help employees understand and use their benefits.' },
+  { label: ['Health &', 'Performance'], color: '#0c4a75', href: 'https://hub.seismic.com/apps/doccenter/7f5f8929-01bb-4f44-bd34-47eec86ede15/main/%252Fdde885eb9d-242e-2ccf-ca7a-67fbca86702b//',
+    blurb: 'Clinical and wellbeing resources that support a healthier, more productive workforce.' },
+  { label: ['HR Technology', 'Solutions'], color: '#4a90c4', href: null,
+    blurb: 'Modern platforms that simplify benefits administration and reporting.' },
+];
+
+const CX = 220, CY = 220, INNER_R = 78, OUTER_R = 190;
+
+function polarToCartesian(cx, cy, r, angleDeg){
+  const a = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function donutPath(cx, cy, innerR, outerR, startAngle, endAngle){
+  const startOuter = polarToCartesian(cx, cy, outerR, endAngle);
+  const endOuter = polarToCartesian(cx, cy, outerR, startAngle);
+  const startInner = polarToCartesian(cx, cy, innerR, endAngle);
+  const endInner = polarToCartesian(cx, cy, innerR, startAngle);
+  const largeArc = endAngle - startAngle <= 180 ? 0 : 1;
+  return `M ${startOuter.x} ${startOuter.y} A ${outerR} ${outerR} 0 ${largeArc} 0 ${endOuter.x} ${endOuter.y} L ${endInner.x} ${endInner.y} A ${innerR} ${innerR} 0 ${largeArc} 1 ${startInner.x} ${startInner.y} Z`;
+}
+
+const svg = document.getElementById('wheelSvg');
+const NS = 'http://www.w3.org/2000/svg';
+const sliceAngle = 360 / slices.length;
+
+slices.forEach((slice, i) => {
+  const startAngle = i * sliceAngle;
+  const endAngle = startAngle + sliceAngle;
+  const midAngle = (startAngle + endAngle) / 2;
+  const midR = (INNER_R + OUTER_R) / 2;
+
+  const g = document.createElementNS(NS, 'g');
+  g.classList.add('slice-group');
+
+  // outward translate direction for hover pop
+  const dir = polarToCartesian(0, 0, 1, midAngle);
+  g.style.setProperty('--tx', (dir.x * 10).toFixed(2) + 'px');
+  g.style.setProperty('--ty', (dir.y * 10).toFixed(2) + 'px');
+  g.addEventListener('mouseenter', () => {
+    g.style.transform = `translate(${g.style.getPropertyValue('--tx')}, ${g.style.getPropertyValue('--ty')}) scale(1.06)`;
+    showInfo(slice);
+  });
+  g.addEventListener('mouseleave', () => {
+    g.style.transform = '';
+    resetInfo();
+  });
+  g.addEventListener('click', () => {
+    if(slice.href){ window.top.location.href = slice.href; }
+  });
+
+  const path = document.createElementNS(NS, 'path');
+  path.classList.add('slice-path');
+  path.setAttribute('d', donutPath(CX, CY, INNER_R, OUTER_R, startAngle, endAngle));
+  path.setAttribute('fill', slice.color);
+  g.appendChild(path);
+
+  const labelPos = polarToCartesian(CX, CY, midR, midAngle);
+  slice.label.forEach((line, li) => {
+    const text = document.createElementNS(NS, 'text');
+    text.classList.add('slice-label');
+    text.setAttribute('x', labelPos.x);
+    text.setAttribute('y', labelPos.y + (li * 15) - (slice.label.length > 1 ? 7 : 0));
+    text.textContent = line;
+    g.appendChild(text);
+  });
+
+  svg.appendChild(g);
+});
+
+// center circle
+const centerCircle = document.createElementNS(NS, 'circle');
+centerCircle.classList.add('center-circle');
+centerCircle.setAttribute('cx', CX);
+centerCircle.setAttribute('cy', CY);
+centerCircle.setAttribute('r', INNER_R - 4);
+svg.appendChild(centerCircle);
+
+const centerText1 = document.createElementNS(NS, 'text');
+centerText1.classList.add('center-text-1');
+centerText1.setAttribute('x', CX);
+centerText1.setAttribute('y', CY - 4);
+centerText1.textContent = 'HUB';
+svg.appendChild(centerText1);
+
+const centerText2 = document.createElementNS(NS, 'text');
+centerText2.classList.add('center-text-2');
+centerText2.setAttribute('x', CX);
+centerText2.setAttribute('y', CY + 16);
+centerText2.textContent = 'CLIENT';
+svg.appendChild(centerText2);
+
+/* ---------------- Info panel ---------------- */
+const infoPanel = document.getElementById('infoPanel');
+const legendList = document.getElementById('infoLegend');
+
+function renderLegend(){
+  legendList.innerHTML = '';
+  slices.forEach(s => {
+    const li = document.createElement('li');
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = s.color;
+    li.appendChild(dot);
+    li.appendChild(document.createTextNode(s.label.join(' ')));
+    legendList.appendChild(li);
+  });
+}
+
+function resetInfo(){
+  infoPanel.innerHTML = `<div class="eyebrow">What we do</div><ul class="info-legend" id="infoLegend"></ul>`;
+  document.getElementById('infoLegend').style.display = 'grid';
+  legendListRefresh();
+}
+function legendListRefresh(){
+  const el = document.getElementById('infoLegend');
+  el.innerHTML = '';
+  slices.forEach(s => {
+    const li = document.createElement('li');
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = s.color;
+    li.appendChild(dot);
+    li.appendChild(document.createTextNode(s.label.join(' ')));
+    el.appendChild(li);
+  });
+}
+
+function showInfo(slice){
+  infoPanel.innerHTML = `
+    <div class="eyebrow" style="color:${slice.color}">${slice.label.join(' ')}</div>
+    <h3>${slice.label.join(' ')}</h3>
+    <p>${slice.blurb}</p>
+  `;
+}
+
+resetInfo();
+</script>
+</body>
+</html>
