@@ -176,31 +176,15 @@
     margin:0;
     padding:0;
     display:grid;
-    gap:2px;
+    gap:10px;
   }
-  .legend-row{
+  .info-legend li{
     font-weight:600;
     color:var(--electric-blue);
     font-size:15.5px;
-    text-decoration:none;
     display:flex;
     align-items:center;
     gap:10px;
-    padding:8px 8px;
-    border-radius:8px;
-    cursor:pointer;
-    transition: background .15s ease, transform .15s ease;
-  }
-  a.legend-row:hover{
-    background:rgba(6,120,213,0.08);
-    transform:translateX(2px);
-  }
-  span.legend-row{
-    cursor:default;
-    color:var(--muted);
-  }
-  span.legend-row:hover{
-    background:rgba(38,55,70,0.05);
   }
   .info-legend .dot{
     width:9px; height:9px; border-radius:50%;
@@ -624,42 +608,16 @@ svg.appendChild(centerText2);
 /* ---------------- Info panel ---------------- */
 const infoPanel = document.getElementById('infoPanel');
 
-// Rebuilds the default (non-hovered) state of the info panel: the legend
-// list. Each legend row is wired to the *same* slice index as its wheel
-// wedge, so hovering the text drives the wheel and vice versa, and
-// clicking the text navigates to the same link as clicking the wedge.
 function resetInfo(){
   infoPanel.innerHTML = `<div class="eyebrow">What we do</div><ul class="info-legend" id="infoLegend"></ul>`;
   const el = document.getElementById('infoLegend');
-
-  slices.forEach((s, i) => {
+  slices.forEach(s => {
     const li = document.createElement('li');
-
     const dot = document.createElement('span');
     dot.className = 'dot';
     dot.style.background = s.color;
-
-    // Use an <a> when there's a real link so it's keyboard/click
-    // navigable too; fall back to a plain span for the two "void" slices.
-    const row = s.href ? document.createElement('a') : document.createElement('span');
-    row.className = 'legend-row';
-    if(s.href){
-      row.href = s.href;
-      row.target = '_top';
-    }
-    row.appendChild(dot);
-    row.appendChild(document.createTextNode(s.label.join(' ')));
-
-    row.addEventListener('mouseenter', () => {
-      applySliceHover(i);
-      showInfo(s);
-    });
-    row.addEventListener('mouseleave', () => {
-      clearSliceHover(i);
-      resetInfo();
-    });
-
-    li.appendChild(row);
+    li.appendChild(dot);
+    li.appendChild(document.createTextNode(s.label.join(' ')));
     el.appendChild(li);
   });
 }
