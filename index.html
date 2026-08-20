@@ -28,8 +28,31 @@
     color:var(--ink);
   }
 
+  /*
+    ---------------------------------------------------------------
+    MOCKUP-ONLY WIDTH CONSTRAINT
+    ---------------------------------------------------------------
+    This page's natural/full width is 1100px (see --full-width below).
+    For this preview, we're artificially constraining it to ~85% of
+    that (935px) to emulate how Seismic will likely letterbox/narrow
+    this content once it's actually wrapped/iframed on the real page.
+
+    When we build the real version for Seismic:
+      - If it's injected full-bleed (iframe set to width:100%/100vw of
+        its container), remove --preview-width entirely and let .page
+        flow to --full-width (or just use 100% with no max-width cap).
+      - If Seismic still imposes its own narrower content column no
+        matter what we do, adjust --preview-width to match whatever
+        that real constraint turns out to be once we test it live.
+    ---------------------------------------------------------------
+  */
+  :root{
+    --full-width: 1100px;
+    --preview-width: 935px; /* ~15% narrower than --full-width, mockup only */
+  }
+
   .page{
-    max-width:1100px;
+    max-width:var(--preview-width);
     margin:0 auto;
     padding:32px 24px 64px;
   }
@@ -296,6 +319,12 @@
 </style>
 </head>
 <body>
+<!--
+  NOTE: .page is intentionally capped at --preview-width (935px, ~15%
+  narrower than the natural --full-width of 1100px) to emulate Seismic's
+  content column for this preview. See the CSS comment above the .page
+  rule for what to change when we build the real embedded version.
+-->
 <div class="page">
 
   <!-- HERO -->
